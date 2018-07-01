@@ -1,5 +1,8 @@
 FROM buildpack-deps:stretch
 
+ENV NODE_VERSION 8.11.3
+ENV DOTNET_SDK_VERSION 2.1.301
+
 # Node install, without Yarn, CPed from https://github.com/nodejs/docker-node/blob/master/8/stretch/Dockerfile
 
 RUN groupadd --gid 1000 node \
@@ -22,8 +25,6 @@ RUN set -ex \
     gpg --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" || \
     gpg --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" ; \
   done
-
-ENV NODE_VERSION 8.11.3
 
 RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && case "${dpkgArch##*-}" in \
@@ -59,8 +60,6 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Install .NET Core SDK
-ENV DOTNET_SDK_VERSION 2.1.301
-
 RUN curl -SL --output dotnet.tar.gz https://dotnetcli.blob.core.windows.net/dotnet/Sdk/$DOTNET_SDK_VERSION/dotnet-sdk-$DOTNET_SDK_VERSION-linux-x64.tar.gz \
     && dotnet_sha512='2101df5b1ca8a4a67f239c65080112a69fb2b48c1a121f293bfb18be9928f7cfbf2d38ed720cbf39c9c04734f505c360bb2835fa5f6200e4d763bd77b47027da' \
     && sha512sum dotnet.tar.gz \
